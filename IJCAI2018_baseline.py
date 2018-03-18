@@ -27,7 +27,7 @@ def convert_data(data):
 
 
 if __name__ == "__main__":
-    online = True
+    online = True# 这里用来标记是 线下验证 还是 在线提交
 
     data = pd.read_csv('round1_ijcai_18_train_20180301.txt', sep=' ')
     data.drop_duplicates(inplace=True)
@@ -50,17 +50,14 @@ if __name__ == "__main__":
     target = ['is_trade']
 
     if online == False:
-        clf = lgb.LGBMClassifier(
-            'goss', num_leaves=63, max_depth=7, n_estimators=80, n_jobs=20)
+        clf = lgb.LGBMClassifier(num_leaves=63, max_depth=7, n_estimators=80, n_jobs=20)
         clf.fit(train[features], train[target], feature_name=features,
                 categorical_feature=['user_gender_id', ])
         test['lgb_predict'] = clf.predict_proba(test[features],)[:, 1]
         print(log_loss(test[target], test['lgb_predict']))
     else:
-        clf = lgb.LGBMClassifier(
-            'goss', num_leaves=63, max_depth=7, n_estimators=80, n_jobs=20)
+        clf = lgb.LGBMClassifier(num_leaves=63, max_depth=7, n_estimators=80, n_jobs=20)
         clf.fit(train[features], train[target],
                 categorical_feature=['user_gender_id', ])
         test['predicted_score'] = clf.predict_proba(test[features])[:, 1]
-        test[['instance_id', 'predicted_score']].to_csv(
-            'baseline.csv', index=False)
+        test[['instance_id', 'predicted_score']].to_csv('baseline.csv', index=False)#保存在线提交结果
