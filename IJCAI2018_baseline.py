@@ -60,4 +60,4 @@ if __name__ == "__main__":
         clf.fit(train[features], train[target],
                 categorical_feature=['user_gender_id', ])
         test['predicted_score'] = clf.predict_proba(test[features])[:, 1]
-        test[['instance_id', 'predicted_score']].to_csv('baseline.csv', index=False)#保存在线提交结果
+        test[['instance_id', 'predicted_score']].to_csv('baseline.csv', index=False,sep=' ')#保存在线提交结果
